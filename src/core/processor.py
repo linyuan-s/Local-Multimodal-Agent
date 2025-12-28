@@ -57,6 +57,26 @@ class Processor:
         return chunks
 
     @staticmethod
+    def get_page_image(file_path: str, page_number: int):
+        """
+        获取 PDF 指定页面的图像 (用于前端预览)
+        :param page_number: 1-based page number
+        :return: PIL Image object
+        """
+        try:
+            doc = fitz.open(file_path)
+            # PyMuPDF uses 0-based indexing
+            page_idx = page_number - 1
+            if 0 <= page_idx < len(doc):
+                page = doc.load_page(page_idx)
+                pix = page.get_pixmap(matrix=fitz.Matrix(2.0, 2.0)) # 放大 2 倍以获得清晰度
+                img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+                return img
+        except Exception as e:
+            print(f"Error rendering page image: {e}")
+        return None
+
+    @staticmethod
     def extract_summary_candidate(pages_content: List[Tuple[int, str]]) -> str:
         """
         尝试提取用于分类的摘要候补文本。
