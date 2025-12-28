@@ -6,7 +6,7 @@
 
 *   **📄 智能文献管理**
     *   **语义搜索**: 使用自然语言（如“Transformer 的核心架构”）搜索本地论文库，支持返回具体页码和文本片段。
-    *   **自动分类**: 自动根据论文摘要和预定义的 Topics（如 CV, NLP, RL）进行分类整理。
+    *   **自动分类**: 自动根据论文摘要和预定义的 Topics（如 SGG, Hypergraph, RL）进行分类整理。本系统**特别适配** Scene Graph Generation (SGG), Hypergraph, Reinforcement Learning (RL) 等领域的文献管理。
     *   **全文索引**: 利用 `PyMuPDF` 高效解析 PDF，结合向量数据库实现精准检索。
 *   **🖼️ 智能图像管理**
     *   **以文搜图**: 输入描述（如“海边的日落”），利用 CLIP 模型快速找到本地图片。
@@ -40,9 +40,15 @@ uv sync
 
 **添加并分类论文**
 ```bash
-python main.py add-paper "path/to/paper.pdf" --topics "CV,NLP,RL"
+python main.py add-paper "path/to/paper.pdf" --topics "SGG,Hypergraph,RL"
 ```
 *   系统出会自动提取文本，计算 Embedding，归类到对应 Topic 文件夹，并将索引存入数据库。
+
+**批量导入 (Ingest)**
+```bash
+python main.py ingest "path/to/folder" --topics "SGG,Hypergraph,RL"
+```
+*   自动扫描文件夹下的所有 PDF 和图片进行入库。
 
 **搜索论文**
 ```bash
@@ -57,7 +63,7 @@ python main.py index-image "path/to/image_folder_or_file"
 
 **以文搜图**
 ```bash
-python main.py search-image "一只在草地上的狗"
+python main.py search-image "一只狗"
 ```
 
 ## 技术栈
