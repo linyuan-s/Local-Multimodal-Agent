@@ -25,6 +25,11 @@
 *   **技术**: OpenAI CLIP 多模态模型。
 *   **解决痛点**: 能够搜索没有标签和文件名的图片素材。
 
+### 4. 图像问答 (Visual Question Answering)
+*   **功能**: 对图片进行自然语言提问（如“这张图里的狗是什么颜色的？”），AI 智能回答。
+*   **技术**: Salesforce BLIP VQA 模型。
+*   **解决痛点**: 深入理解图片内容，不仅仅是搜索。
+
 ---
 
 ## 技术栈 (Tech Stack)
@@ -34,6 +39,7 @@
 *   **核心模型**:
     *   文本嵌入: `all-MiniLM-L6-v2` (Sentence-Transformers)
     *   多模态嵌入: `openai/clip-vit-base-patch32` (HuggingFace Transformers)
+    *   **VQA 模型**: `Salesforce/blip-vqa-base` (Visual Question Answering)
 *   **向量数据库**: `ChromaDB` (本地持久化存储)
 *   **PDF 处理**: `PyMuPDF` (fitz)
 *   **依赖管理**: `uv` + `Conda`
@@ -67,6 +73,7 @@ streamlit run app.py
 1.  输入文件夹路径进行 **自动整理**。
 2.  输入问题进行 **文献检索**。
 3.  输入描述进行 **以文搜图**。
+4.  上传图片进行 **图像问答 (VQA)**。
 
 ### 3. 命令行模式 (CLI Usage)
 如果您喜欢终端操作，也可以使用 `main.py`。
@@ -84,6 +91,11 @@ python main.py search-paper "What is Scene Graph Generation?"
 **搜图片**:
 ```bash
 python main.py search-image "A dog"
+```
+
+**图片问答**:
+```bash
+python main.py ask-image "D:\path\to\image.jpg" "What is in this picture?"
 ```
 
 ---

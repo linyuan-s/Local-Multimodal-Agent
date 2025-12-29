@@ -108,5 +108,16 @@ def ingest(
     print(f"Images processed: {img_count}")
     print("="*50)
 
+@app.command(name="ask-image")
+def ask_image_cli(image_path: str, question: str):
+    """
+    对图片提问 (Visual Question Answering)
+    :param image_path: 图片路径
+    :param question: 问题内容 (英文效果最佳)
+    """
+    answer = ImageService.answer_question(image_path, question)
+    print(f"\n[Question]: {question}")
+    print(f"[Answer]  : {answer}\n")
+
 if __name__ == "__main__":
     app()

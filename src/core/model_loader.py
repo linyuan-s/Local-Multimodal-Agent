@@ -1,5 +1,5 @@
 from sentence_transformers import SentenceTransformer
-from transformers import CLIPProcessor, CLIPModel, CLIPTokenizer
+from transformers import CLIPProcessor, CLIPModel, CLIPTokenizer, BlipProcessor, BlipForQuestionAnswering
 import torch
 
 class ModelLoader:
@@ -7,6 +7,8 @@ class ModelLoader:
     _clip_model = None
     _clip_processor = None
     _clip_tokenizer = None
+    _blip_model = None
+    _blip_processor = None
 
     @classmethod
     def get_text_model(cls):
@@ -26,6 +28,16 @@ class ModelLoader:
             cls._clip_processor = CLIPProcessor.from_pretrained(model_name)
             cls._clip_tokenizer = CLIPTokenizer.from_pretrained(model_name)
         return cls._clip_model, cls._clip_processor, cls._clip_tokenizer
+
+    @classmethod
+    def get_blip_components(cls):
+        """Lazy load BLIP VQA model"""
+        if cls._blip_model is None:
+            print("Loading BLIP Model (Salesforce/blip-vqa-base)...")
+            model_name = "Salesforce/blip-vqa-base"
+            cls._blip_processor = BlipProcessor.from_pretrained(model_name)
+            cls._blip_model = BlipForQuestionAnswering.from_pretrained(model_name)
+        return cls._blip_model, cls._blip_processor
 
 # 便捷获取函数
 def get_text_embedding(text):

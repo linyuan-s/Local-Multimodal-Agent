@@ -79,5 +79,37 @@ class ImageService:
             # score = results['distances'][0][i]
             
             print(f"Image: {filename}")
-            print(f"Path: {path}")
             print("-" * 50)
+
+    @staticmethod
+    def answer_question(image_path: str, question: str):
+        """
+        Visual Question Answering (VQA) using BLIP
+        """
+        try:
+            from src.core.model_loader import ModelLoader
+            model, processor = ModelLoader.get_blip_components()
+            
+            # Load Image
+            # Check if path exists
+            if not os.path.exists(image_path):
+                return "Error: Image file not found."
+
+            raw_image = Image.open(image_path).convert('RGB')
+            
+            # Prepare inputs
+            # encoding
+            inputs = processor(raw_image, question, return_tensors="pt")
+            
+            # Generate answer
+            # We move inputs to the same device as model if we were using GPU, 
+            # but here default is CPU or auto-handled by transformers if lucky.
+            # Ideally: inputs = {k: v.to(model.device) for k, v in inputs.items()}
+            
+            out = model.generate(**inputs)
+            answer = processor.decode(out[0], skip_special_tokens=True)
+            
+            return answer
+        except Exception as e:
+            print(f"Error in VQA: {e}")
+            return f"Error generating answer: {str(e)}"

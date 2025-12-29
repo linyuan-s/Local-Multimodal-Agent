@@ -66,8 +66,8 @@ with st.sidebar:
     
     page = st.radio(
         "选择功能模块",
-        ["📁 智能整理 (Auto-Org)", "🔍 文献深度搜索 (Deep Search)", "🖼️ 以文搜图 (Image Search)"],
-        index=1 # 默认进搜索页
+        ["📁 智能整理 (Auto-Org)", "🔍 文献深度搜索 (Deep Search)", "🖼️ 以文搜图 (Image Search)", "💬 图像问答 (VQA)"],
+        index=3 # 默认选中新功能方便测试
     )
     
     st.markdown("---")
@@ -273,6 +273,37 @@ elif page == "🖼️ 以文搜图 (Image Search)":
                     st.caption(f"{os.path.basename(img_path)} (Sim: {score:.2f})")
                 else:
                     st.error(f"Image not found: {img_path}")
+
+# --- 页面 D: 图像问答 (VQA) ---
+elif page == "💬 图像问答 (VQA)":
+    st.markdown("<h1 class='main-header'>💬 Visual Question Answering</h1>", unsafe_allow_html=True)
+    
+    col1, col2 = st.columns([1, 1])
+    
+    # 初始化 temp_path 防止变量未定义
+    temp_path = None
+
+    with col1:
+        uploaded_file = st.file_uploader("上传一张图片...", type=["jpg", "png", "jpeg"])
+        if uploaded_file is not None:
+            # Save temp
+            temp_path = os.path.join("temp_vqa_image.jpg")
+            with open(temp_path, "wb") as f:
+                f.write(uploaded_file.getbuffer())
+            
+            st.image(uploaded_file, caption="Uploaded Image", use_container_width=True)
+            
+    with col2:
+        if temp_path:
+            st.markdown("### Ask a question:")
+            question = st.text_input("Question", value="What is in this picture?")
+            
+            if st.button("🤖 Ask AI"):
+                with st.spinner("Thinking... (Loading BLIP model)"):
+                    answer = ImageService.answer_question(temp_path, question)
+                    st.success(f"**Answer:** {answer}")
+        else:
+            st.info("👈 请先在左侧上传图片。")
 
 # --- Helper function patch ---
 # 因为直接 import model_loader 可能会有相对路径问题，我们在 app.py 开头处理了 sys.path

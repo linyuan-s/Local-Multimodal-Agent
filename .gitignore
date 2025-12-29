@@ -45,3 +45,6 @@ model_cache/
 
 # Logs
 *.log
+
+# Temporary VQA Files
+temp_vqa_image.jpg
